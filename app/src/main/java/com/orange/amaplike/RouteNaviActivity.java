@@ -1,9 +1,11 @@
 package com.orange.amaplike;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.amap.api.navi.AMapNavi;
 import com.amap.api.navi.AMapNaviListener;
@@ -23,18 +25,27 @@ import com.amap.api.navi.model.AimLessModeCongestionInfo;
 import com.amap.api.navi.model.AimLessModeStat;
 import com.amap.api.navi.model.NaviInfo;
 
+import cn.dujc.core.ui.BaseActivity;
+import cn.dujc.core.util.StringUtil;
 
-public class RouteNaviActivity extends Activity implements AMapNaviListener, AMapNaviViewListener {
+public class RouteNaviActivity extends BaseActivity implements AMapNaviListener, AMapNaviViewListener {
 
     AMapNaviView mAMapNaviView;
     AMapNavi mAMapNavi;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_basic_navi);
+    public int getViewId() {
+        return R.layout.activity_basic_navi;
+    }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void initBasic(Bundle savedInstanceState) {
         mAMapNaviView = (AMapNaviView) findViewById(R.id.navi_view);
         mAMapNaviView.onCreate(savedInstanceState);
         mAMapNaviView.setAMapNaviViewListener(this);
@@ -43,14 +54,16 @@ public class RouteNaviActivity extends Activity implements AMapNaviListener, AMa
         mAMapNavi.addAMapNaviListener(this);
         mAMapNavi.setUseInnerVoice(true);
         mAMapNavi.setEmulatorNaviSpeed(60);
-        boolean gps = getIntent().getBooleanExtra("gps", true);
+
+        String limit = extras().get("limit", "4.2");
+        ((TextView) findViewById(R.id.tv_limit)).setText(StringUtil.concat(limit, "m"));
+
+        boolean gps = extras().get("gps", true);
         if (gps) {
             mAMapNavi.startNavi(NaviType.GPS);
         } else {
             mAMapNavi.startNavi(NaviType.EMULATOR);
         }
-
-
     }
 
     @Override

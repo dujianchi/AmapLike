@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,6 +38,7 @@ import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.AMapGestureListener;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
@@ -76,6 +78,7 @@ import com.orange.amaplike.overlay.WalkRouteOverlay;
 import com.orange.amaplike.pickpoi.PoiItemEvent;
 import com.orange.amaplike.pickpoi.PoiSearchActivity;
 import com.orange.amaplike.pickpoi.SelectedMyPoiEvent;
+import com.orange.amaplike.utils.ImageUtil;
 import com.orange.amaplike.utils.ViewAnimUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -89,6 +92,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.dujc.core.ui.BaseActivity;
 import cn.dujc.core.util.BitmapUtil;
+import cn.dujc.core.util.Numbers;
 
 /**
  * created by czh on 2018/1/4
@@ -117,7 +121,8 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
     TextView mTargetText;
     @BindView(R.id.bus_result_recyclerView)
     RecyclerView mBusResultRview;
-
+    @BindView(R.id.et_limit)
+    EditText et_limit;
 
     @BindView(R.id.route_plan_float_btn)
     FloatingActionButton mFloatBtn;
@@ -224,6 +229,7 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.READ_PHONE_STATE);
+//        updateUiAfterRouted();
     }
 
     @Override
@@ -334,7 +340,9 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
         /**   基本设置   **/
         mAmap.setTrafficEnabled(true);
         mAmap.showIndoorMap(true);
-        mAmap.getUiSettings().setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+        UiSettings uiSettings = mAmap.getUiSettings();
+        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+        uiSettings.setLogoPosition(AMapOptions.LOGO_POSITION_BOTTOM_CENTER);
 
         /**   定位模式   **/
         mLocationStyle = new MyLocationStyle();
@@ -646,7 +654,9 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
                     return;
                 }
                 //todo
-                starter().go(RouteNaviActivity.class);
+                starter()
+                        .with("limit", et_limit.getText().toString())
+                        .go(RouteNaviActivity.class);
                 //new NaviDialog().showView(mActivity, mStartPoi, mEndPoi, mSelectedType);
                 break;
             case R.id.path_layout:
@@ -924,6 +934,7 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
         mNesteScrollView.setVisibility(View.VISIBLE);
     }
 
+    Marker marker;
 
     private void drawDriveRoutes(DriveRouteResult driveRouteResult, DrivePath path) {
         mAmap.clear();
@@ -943,14 +954,18 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
             List<LatLonPoint> polyline = steps.get(stepSize / 2).getPolyline();
             if (polyline != null && polyline.size() > 0) {
                 LatLonPoint point = polyline.get(0);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.outWidth = 40;
-                options.outHeight = 40;
-                Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.icon_limit, options);
-                mAmap.addMarker(new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromBitmap(BitmapUtil.getResizedBitmap(bitmap, 100, 100, true)))
-                        .position(new LatLng(point.getLatitude(), point.getLongitude()))
-                );
+                double limit = Numbers.toDouble(et_limit.getText().toString(), 4.2);
+                LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
+                Bitmap bitmap = ImageUtil.get(mActivity, limit);
+                if (marker != null) {
+                    marker.remove();
+                    marker.destroy();
+                    marker = null;
+                }
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap)).position(latLng);
+                marker = mAmap.addMarker(markerOptions);
+                marker.setVisible(true);
             }
         }
 
