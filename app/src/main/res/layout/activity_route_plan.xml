@@ -176,18 +176,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/space08"
-                            android:text="车高(米）"
+                            android:text="车型"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font16" />
 
-                        <EditText
-                            android:id="@+id/et_limit"
+                        <TextView
+                            android:id="@+id/tv_car_model"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/space10"
                             android:background="@null"
-                            android:inputType="numberDecimal"
-                            android:text="4.2"
+                            android:text="东风大卡车"
                             android:textColor="@color/white" />
                     </LinearLayout>
 
@@ -206,16 +205,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/space08"
-                            android:text="车型"
+                            android:text="车高(米）"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font16" />
 
                         <EditText
+                            android:id="@+id/et_limit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/space10"
                             android:background="@null"
-                            android:text="东风大卡车"
+                            android:inputType="numberDecimal"
+                            android:text="4.2"
                             android:textColor="@color/white" />
                     </LinearLayout>
                 </LinearLayout>

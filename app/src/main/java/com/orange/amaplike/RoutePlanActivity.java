@@ -1,10 +1,7 @@
 package com.orange.amaplike;
 
 import android.Manifest;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,7 +9,6 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -27,8 +23,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,6 +74,7 @@ import com.orange.amaplike.pickpoi.PoiSearchActivity;
 import com.orange.amaplike.pickpoi.SelectedMyPoiEvent;
 import com.orange.amaplike.utils.ImageUtil;
 import com.orange.amaplike.utils.ViewAnimUtils;
+import com.orange.amaplike.widget.PickDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -91,7 +86,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.dujc.core.ui.BaseActivity;
-import cn.dujc.core.util.BitmapUtil;
 import cn.dujc.core.util.Numbers;
 
 /**
@@ -121,8 +115,11 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
     TextView mTargetText;
     @BindView(R.id.bus_result_recyclerView)
     RecyclerView mBusResultRview;
+
     @BindView(R.id.et_limit)
     EditText et_limit;
+    @BindView(R.id.tv_car_model)
+    TextView tv_car_model;
 
     @BindView(R.id.route_plan_float_btn)
     FloatingActionButton mFloatBtn;
@@ -612,7 +609,7 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
 
     @OnClick({R.id.route_plan_return_btn, R.id.top_search_layout, R.id.route_plan_start_edit_layout, R.id.route_plan_to_edit_layout,
             R.id.route_plan_exchange_btn, R.id.route_plan_float_btn, R.id.navi_start_btn, R.id.navi_start_btn_1,
-            R.id.path_layout, R.id.path_layout1, R.id.path_layout2
+            R.id.path_layout, R.id.path_layout1, R.id.path_layout2, R.id.tv_car_model
     })
     public void onViewclik(View view) {
         if (FirstLocate) {
@@ -668,7 +665,25 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
             case R.id.path_layout2:
                 onPathClick(2);
                 break;
+            case R.id.tv_car_model:
+                showPickDialog();
+                break;
         }
+    }
+
+    PickDialog mPickDialog;
+
+    private void showPickDialog() {
+        if (mPickDialog == null) {
+            mPickDialog = new PickDialog(mActivity, new PickDialog.Callback() {
+                @Override
+                public void onPicked(String name, double val) {
+                    tv_car_model.setText(name);
+                    et_limit.setText(String.valueOf(val));
+                }
+            });
+        }
+        if (!mPickDialog.isShowing()) mPickDialog.show();
     }
 
     private void onPathClick(int i) {

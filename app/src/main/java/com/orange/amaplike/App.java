@@ -1,9 +1,10 @@
 package com.orange.amaplike;
 
-import android.app.Application;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.multidex.MultiDexApplication;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import cn.dujc.core.initializer.toolbar.IToolbar;
 import cn.dujc.core.ui.IBaseUI;
 import cn.dujc.core.ui.StatusBarPlaceholder;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     @Override
     public void onCreate() {

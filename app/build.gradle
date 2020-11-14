@@ -20,6 +20,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -51,11 +52,14 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    implementation 'androidx.multidex:multidex:2.0.1'
+
     implementation 'com.amap.api:navi-3dmap:latest.integration'
     implementation 'com.amap.api:search:latest.integration'
     implementation 'com.amap.api:location:latest.integration'
 
     implementation 'cn.dujc.Core:core:0.3-x2-v5'
+    implementation 'cn.dujc.Core:widget:0.3-x2-v5'
     implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation 'com.jakewharton:butterknife:10.2.3'
