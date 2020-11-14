@@ -19,7 +19,7 @@
     <!--这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <!--这个权限用于允许程序在手机屏幕关闭后后台进程仍然运行-->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--用户组件导航页蓝牙设备连接提醒-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
@@ -28,20 +28,24 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="d2981b1fce82c29c0ad0802e96e9d25f" />
+            android:value="f2cd4c7ea77aafc9a0fc98cb679803cf" />
         <service android:name="com.amap.api.location.APSService" />
 
         <activity
             android:name="com.amap.api.navi.AmapRouteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|navigation" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".RoutePlanActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="stateHidden|stateUnchanged">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,11 +53,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".RoutePlanActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/NoActionBarTheme"
-            android:windowSoftInputMode="stateHidden|stateUnchanged" />
         <activity android:name=".pickpoi.PoiSearchActivity" />
         <activity android:name=".pickpoi.SelectPoiFromMapActivity" />
         <activity
