@@ -22,7 +22,7 @@
             android:background="@drawable/shape_bg_gray"
             />
 
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/bus_paths_viewpage"
             android:layout_width="match_parent"
             android:layout_height="94dp"/>
@@ -43,7 +43,7 @@
     </LinearLayout>
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bus_segment_list"
         android:layout_width="match_parent"
         android:layout_height="400dp"

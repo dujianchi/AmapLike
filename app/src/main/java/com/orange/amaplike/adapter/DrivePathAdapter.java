@@ -1,12 +1,13 @@
 package com.orange.amaplike.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.services.route.DriveStep;
 import com.orange.amaplike.R;
@@ -23,6 +24,7 @@ import butterknife.ButterKnife;
  */
 
 public class DrivePathAdapter extends RecyclerView.Adapter {
+
     private Context mContext;
     List<DriveStep> mItemList = new ArrayList<DriveStep>();
 
@@ -36,13 +38,13 @@ public class DrivePathAdapter extends RecyclerView.Adapter {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        view= LayoutInflater.from(mContext).inflate(R.layout.item_bus_segment,parent,false);
+        view = LayoutInflater.from(mContext).inflate(R.layout.item_bus_segment, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        ViewHolder viewHolder=(ViewHolder)holder;
+        ViewHolder viewHolder = (ViewHolder) holder;
 
         final DriveStep item = mItemList.get(position);
         if (position == 0) {
@@ -68,7 +70,7 @@ public class DrivePathAdapter extends RecyclerView.Adapter {
         return mItemList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.bus_line_name)
         TextView driveLineName;
@@ -79,7 +81,7 @@ public class DrivePathAdapter extends RecyclerView.Adapter {
 
         public ViewHolder(View view) {
             super(view);
-            ButterKnife.bind(this,view);
+            ButterKnife.bind(this, view);
         }
     }
 

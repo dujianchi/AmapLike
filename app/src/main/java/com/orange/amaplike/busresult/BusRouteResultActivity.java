@@ -3,19 +3,19 @@ package com.orange.amaplike.busresult;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
@@ -36,10 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.dujc.core.ui.BaseActivity;
 
-public class BusRouteResultActivity extends AppCompatActivity {
+public class BusRouteResultActivity extends BaseActivity {
 
     @BindView(R.id.route_plan_map)
     MapView mMapView;
@@ -56,46 +56,46 @@ public class BusRouteResultActivity extends AppCompatActivity {
     private PathsAdapter mPathAdapter;
     private BusPathAdapter mBusPathAdapter;
     private BusSegmentListAdapter mBusSegmentListAdapter;
-    private List<BusStep> mListData=new ArrayList<BusStep>();
-    private int mHeight=150;
-    private float mOffset=0.0f;
-    private int mSheetHeight=120;
+    private List<BusStep> mListData = new ArrayList<BusStep>();
+    private int mHeight = 150;
+    private float mOffset = 0.0f;
+    private int mSheetHeight = 120;
 
-    private Context mContext;
+
     private BusRouteResult mRouteResult;
 
 
-    public static void start(Context context, BusRouteResult result,int pos) {
+    public static void start(Context context, BusRouteResult result, int pos) {
         Intent starter = new Intent(context, BusRouteResultActivity.class);
-        starter.putExtra("result",result);
-        starter.putExtra("position",pos);
+        starter.putExtra("result", result);
+        starter.putExtra("position", pos);
         context.startActivity(starter);
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bus_route_result);
-        ButterKnife.bind(this);
-        mContext=this;
+    public int getViewId() {
+        return R.layout.activity_bus_route_result;
+    }
 
+    @Override
+    public void initBasic(Bundle savedInstanceState) {
         init();
         initMap(savedInstanceState);
         initSheet();
     }
 
-    private void init(){
-        if (getIntent().hasExtra("result")){
-            mRouteResult=getIntent().getParcelableExtra("result");
-        }else {
+    private void init() {
+        if (getIntent().hasExtra("result")) {
+            mRouteResult = getIntent().getParcelableExtra("result");
+        } else {
             finish();
         }
         DisplayMetrics dm = new DisplayMetrics();
         dm = getResources().getDisplayMetrics();
-        mHeight=dm.heightPixels;
-        mSheetHeight=getResources().getDimensionPixelSize(R.dimen.sheet_peakHeight);
-        Log.d("czh","height:"+mHeight);
-        mBehavior=AnchorBottomSheetBehavior.from(mNestScrollView);
+        mHeight = dm.heightPixels;
+        mSheetHeight = getResources().getDimensionPixelSize(R.dimen.sheet_peakHeight);
+        Log.d("czh", "height:" + mHeight);
+        mBehavior = AnchorBottomSheetBehavior.from(mNestScrollView);
         mBehavior.addBottomSheetCallback(new AnchorBottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -126,25 +126,25 @@ public class BusRouteResultActivity extends AppCompatActivity {
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 //                Log.d("bottomsheet-", "slideOffset:"+slideOffset);
-                mOffset=slideOffset;
+                mOffset = slideOffset;
             }
         });
         mBehavior.setState(AnchorBottomSheetBehavior.STATE_COLLAPSED);
 
     }
 
-    private void initSheet(){
-        int position=getIntent().getIntExtra("position",0);
-        List<View> list=new ArrayList<View>();
-        for (BusPath path:mRouteResult.getPaths()){
-            View view= LayoutInflater.from(mContext).inflate(R.layout.layout_page_item,null);
-            TextView title=(TextView)view.findViewById(R.id.bus_path_title);
-            TextView content=(TextView)view.findViewById(R.id.path_content);
+    private void initSheet() {
+        int position = getIntent().getIntExtra("position", 0);
+        List<View> list = new ArrayList<View>();
+        for (BusPath path : mRouteResult.getPaths()) {
+            View view = LayoutInflater.from(mActivity).inflate(R.layout.layout_page_item, null);
+            TextView title = (TextView) view.findViewById(R.id.bus_path_title);
+            TextView content = (TextView) view.findViewById(R.id.path_content);
             title.setText(AMapUtil.getBusPathTitle(path));
             content.setText(AMapUtil.getBusPathDes(path));
             list.add(view);
         }
-        mPathAdapter=new PathsAdapter(list);
+        mPathAdapter = new PathsAdapter(list);
         mViewPager.setAdapter(mPathAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -154,10 +154,10 @@ public class BusRouteResultActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                drawBusRoutes(mRouteResult,mRouteResult.getPaths().get(position));
+                drawBusRoutes(mRouteResult, mRouteResult.getPaths().get(position));
 //                mListData.clear();
 //                mListData.addAll(mRouteResult.getPaths().get(position).getSteps());
-                mStepsList.setAdapter(new BusPathAdapter(mContext, mRouteResult.getPaths().get(position).getSteps()));
+                mStepsList.setAdapter(new BusPathAdapter(mActivity, mRouteResult.getPaths().get(position).getSteps()));
             }
 
             @Override
@@ -166,18 +166,18 @@ public class BusRouteResultActivity extends AppCompatActivity {
             }
         });
         mViewPager.setCurrentItem(position);
-        mListData=mRouteResult.getPaths().get(position).getSteps();
+        mListData = mRouteResult.getPaths().get(position).getSteps();
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mStepsList.setLayoutManager(linearLayoutManager);
-        mStepsList.setAdapter(new BusPathAdapter(mContext,mListData));
+        mStepsList.setAdapter(new BusPathAdapter(mActivity, mListData));
     }
 
-    private void initMap(Bundle savedInstanceState){
+    private void initMap(Bundle savedInstanceState) {
         mMapView.onCreate(savedInstanceState);
-        mAmap=mMapView.getMap();
+        mAmap = mMapView.getMap();
 
         /**   基本设置   **/
         mAmap.setTrafficEnabled(true);
@@ -185,7 +185,7 @@ public class BusRouteResultActivity extends AppCompatActivity {
         mAmap.getUiSettings().setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
 
         /**   定位模式   **/
-        MyLocationStyle locationStyle=new MyLocationStyle();
+        MyLocationStyle locationStyle = new MyLocationStyle();
         locationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
         mAmap.setMyLocationStyle(locationStyle);
         mAmap.setMyLocationEnabled(true);
@@ -193,7 +193,7 @@ public class BusRouteResultActivity extends AppCompatActivity {
         mAmap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-                drawBusRoutes(mRouteResult,mRouteResult.getPaths().get(0));
+                drawBusRoutes(mRouteResult, mRouteResult.getPaths().get(0));
             }
         });
 
@@ -210,10 +210,10 @@ public class BusRouteResultActivity extends AppCompatActivity {
     }
 
 
-    private void drawBusRoutes(BusRouteResult busRouteResult,BusPath path){
+    private void drawBusRoutes(BusRouteResult busRouteResult, BusPath path) {
         mAmap.clear();
         mCurrentOverlay = new BusRouteOverlay(
-                mContext, mAmap,path,busRouteResult.getStartPos(),
+                mActivity, mAmap, path, busRouteResult.getStartPos(),
                 busRouteResult.getTargetPos());
         mCurrentOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
         mCurrentOverlay.removeFromMap();
@@ -221,13 +221,13 @@ public class BusRouteResultActivity extends AppCompatActivity {
         mCurrentOverlay.zoomToBusSpan(getSheetPadding());
     }
 
-    private int getSheetPadding(){
-        return (int)((mHeight-mSheetHeight)*mOffset+mSheetHeight);
+    private int getSheetPadding() {
+        return (int) ((mHeight - mSheetHeight) * mOffset + mSheetHeight);
     }
 
     @OnClick({R.id.return_img})
-    public void onViewClick(View view){
-        if (view.getId()==R.id.return_img){
+    public void onViewClick(View view) {
+        if (view.getId() == R.id.return_img) {
             finish();
         }
     }
@@ -238,11 +238,13 @@ public class BusRouteResultActivity extends AppCompatActivity {
         super.onDestroy();
         mMapView.onDestroy();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         mMapView.onResume();
     }
+
     @Override
     protected void onPause() {
         super.onPause();

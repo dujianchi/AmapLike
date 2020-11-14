@@ -20,21 +20,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.RestrictTo;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.R;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.os.ParcelableCompat;
-import android.support.v4.os.ParcelableCompatCreatorCallbacks;
-import android.support.v4.view.AbsSavedState;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.VelocityTrackerCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ViewDragHelper;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -44,11 +29,30 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.RestrictTo;
+import androidx.annotation.VisibleForTesting;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.os.ParcelableCompat;
+import androidx.core.os.ParcelableCompatCreatorCallbacks;
+import androidx.core.view.MotionEventCompat;
+import androidx.core.view.NestedScrollingChild;
+import androidx.core.view.VelocityTrackerCompat;
+import androidx.core.view.ViewCompat;
+import androidx.customview.view.AbsSavedState;
+import androidx.customview.widget.ViewDragHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.R;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 
-import static android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
+
+//import androidx.core.view.AbsSavedState;
 
 
 /**
@@ -451,7 +455,7 @@ public class NoAnchorBottomSheetBehavior<V extends View> extends CoordinatorLayo
      * @param peekHeight The height of the collapsed bottom sheet in pixels, or
      *                   {@link #PEEK_HEIGHT_AUTO} to configure the sheet to peek automatically
      *                   at 16:9 ratio keyline.
-     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight
+     * @attr ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight
      */
     public final void setPeekHeight(int peekHeight) {
         boolean layout = false;
@@ -479,7 +483,7 @@ public class NoAnchorBottomSheetBehavior<V extends View> extends CoordinatorLayo
      *
      * @return The height of the collapsed bottom sheet in pixels, or {@link #PEEK_HEIGHT_AUTO}
      *         if the sheet is configured to peek automatically at 16:9 ratio keyline
-     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight
+     * @attr ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_peekHeight
      */
     public final int getPeekHeight() {
         return mPeekHeightAuto ? PEEK_HEIGHT_AUTO : mPeekHeight;
@@ -489,7 +493,7 @@ public class NoAnchorBottomSheetBehavior<V extends View> extends CoordinatorLayo
      * Sets whether this bottom sheet can hide when it is swiped down.
      *
      * @param hideable {@code true} to make this bottom sheet hideable.
-     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_hideable
+     * @attr ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_hideable
      */
     public void setHideable(boolean hideable) {
         mHideable = hideable;
@@ -499,7 +503,7 @@ public class NoAnchorBottomSheetBehavior<V extends View> extends CoordinatorLayo
      * Gets whether this bottom sheet can hide when it is swiped down.
      *
      * @return {@code true} if this bottom sheet can hide.
-     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_hideable
+     * @attr ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_hideable
      */
     public boolean isHideable() {
         return mHideable;
@@ -510,7 +514,7 @@ public class NoAnchorBottomSheetBehavior<V extends View> extends CoordinatorLayo
      * after it is expanded once. Setting this to true has no effect unless the sheet is hideable.
      *
      * @param skipCollapsed True if the bottom sheet should skip the collapsed state.
-     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed
+     * @attr ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed
      */
     public void setSkipCollapsed(boolean skipCollapsed) {
         mSkipCollapsed = skipCollapsed;
@@ -521,7 +525,7 @@ public class NoAnchorBottomSheetBehavior<V extends View> extends CoordinatorLayo
      * after it is expanded once.
      *
      * @return Whether the bottom sheet should skip the collapsed state.
-     * @attr ref android.support.design.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed
+     * @attr ref com.google.android.material.R.styleable#BottomSheetBehavior_Layout_behavior_skipCollapsed
      */
     public boolean getSkipCollapsed() {
         return mSkipCollapsed;

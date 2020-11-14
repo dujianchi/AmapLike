@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BusSegmentListAdapter extends BaseAdapter {
+
 	private Context mContext;
 	private List<SchemeBusStep> mBusStepList = new ArrayList<SchemeBusStep>();
 

@@ -1,7 +1,7 @@
 package com.orange.amaplike.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
  */
 
 public class BusStepAdapter extends RecyclerView.Adapter{
+
     private Context mContext;
     List<BusStep> mItemList = new ArrayList<BusStep>();
 

@@ -5,18 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
@@ -41,8 +34,6 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.amap.api.services.help.Inputtips;
-import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
@@ -54,11 +45,13 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.dujc.core.ui.BaseActivity;
+
 /**
  * created by czh on 2018-01-12
  */
-public class SelectPoiFromMapActivity extends AppCompatActivity implements LocationSource,
-        AMapLocationListener, GeocodeSearch.OnGeocodeSearchListener, PoiSearch.OnPoiSearchListener{
+public class SelectPoiFromMapActivity extends BaseActivity implements LocationSource,
+        AMapLocationListener, GeocodeSearch.OnGeocodeSearchListener, PoiSearch.OnPoiSearchListener {
 
     private ListView listView;
     private AMap aMap;
@@ -93,10 +86,13 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
     private int mFrom;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_poi_from_map);
-        getSupportActionBar().setTitle(R.string.poi_search_choose_location_from_map);
+    public int getViewId() {
+        return R.layout.activity_select_poi_from_map;
+    }
+
+    @Override
+    public void initBasic(Bundle savedInstanceState) {
+        setTitle(R.string.poi_search_choose_location_from_map);
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
@@ -107,7 +103,6 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
         resultData = new ArrayList<>();
     }
 
-
     private void initView() {
 
         listView = (ListView) findViewById(R.id.listview);
@@ -116,8 +111,8 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
             @Override
             public void BtnConfrim(PoiItem item) {
                 finish();
-                EventBus.getDefault().post(new PoiItemEvent(item,mFrom));
-                Intent intent=new Intent(SelectPoiFromMapActivity.this, RoutePlanActivity.class);
+                EventBus.getDefault().post(new PoiItemEvent(item, mFrom));
+                Intent intent = new Intent(SelectPoiFromMapActivity.this, RoutePlanActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
@@ -137,7 +132,7 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
      * 初始化
      */
     private void init() {
-        mFrom=getIntent().getIntExtra("from",1);
+        mFrom = getIntent().getIntExtra("from", 1);
 
         if (aMap == null) {
             aMap = mapView.getMap();
@@ -216,7 +211,7 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        if(null != mlocationClient){
+        if (null != mlocationClient) {
             mlocationClient.onDestroy();
         }
     }
@@ -240,8 +235,8 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
                 isInputKeySearch = false;
 
             } else {
-                String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
-                Log.e("AmapErr",errText);
+                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
+                Log.e("AmapErr", errText);
             }
         }
     }
@@ -290,7 +285,7 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
     public void geoAddress() {
 //        Log.i("MY", "geoAddress"+ searchLatlonPoint.toString());
         showDialog();
-        if (searchLatlonPoint != null){
+        if (searchLatlonPoint != null) {
             RegeocodeQuery query = new RegeocodeQuery(searchLatlonPoint, 200, GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
             geocoderSearch.getFromLocationAsyn(query);
         }
@@ -338,7 +333,8 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
 
     /**
      * POI搜索结果回调
-     * @param poiResult 搜索结果
+     *
+     * @param poiResult  搜索结果
      * @param resultCode 错误码
      */
     @Override
@@ -361,6 +357,7 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
 
     /**
      * 更新列表中的item
+     *
      * @param poiItems
      */
     private void updateListview(List<PoiItem> poiItems) {
@@ -414,10 +411,10 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
         LatLng latLng = aMap.getCameraPosition().target;
         Point screenPosition = aMap.getProjection().toScreenLocation(latLng);
         locationMarker = aMap.addMarker(new MarkerOptions()
-                .anchor(0.5f,0.5f)
+                .anchor(0.5f, 0.5f)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.purple_pin)));
         //设置Marker在屏幕上,不跟随地图移动
-        locationMarker.setPositionByPixels(screenPosition.x,screenPosition.y);
+        locationMarker.setPositionByPixels(screenPosition.x, screenPosition.y);
         locationMarker.setZIndex(1);
 
     }
@@ -427,11 +424,11 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
      */
     public void startJumpAnimation() {
 
-        if (locationMarker != null ) {
+        if (locationMarker != null) {
             //根据屏幕距离计算需要移动的目标点
             final LatLng latLng = locationMarker.getPosition();
-            Point point =  aMap.getProjection().toScreenLocation(latLng);
-            point.y -= dip2px(this,125);
+            Point point = aMap.getProjection().toScreenLocation(latLng);
+            point.y -= dip2px(this, 125);
             LatLng target = aMap.getProjection()
                     .fromScreenLocation(point);
             //使用TranslateAnimation,填写一个需要移动的目标点
@@ -440,10 +437,10 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
                 @Override
                 public float getInterpolation(float input) {
                     // 模拟重加速度的interpolator
-                    if(input <= 0.5) {
+                    if (input <= 0.5) {
                         return (float) (0.5f - 2 * (0.5 - input) * (0.5 - input));
                     } else {
-                        return (float) (0.5f - Math.sqrt((input - 0.5f)*(1.5f - input)));
+                        return (float) (0.5f - Math.sqrt((input - 0.5f) * (1.5f - input)));
                     }
                 }
             });
@@ -455,7 +452,7 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
             locationMarker.startAnimation();
 
         } else {
-            Log.e("ama","screenMarker is null");
+            Log.e("ama", "screenMarker is null");
         }
     }
 
@@ -468,6 +465,7 @@ public class SelectPoiFromMapActivity extends AppCompatActivity implements Locat
 
     private boolean isInputKeySearch;
     private String inputSearchKey;
+
     private void searchPoi(Tip result) {
         isInputKeySearch = true;
         inputSearchKey = result.getName();//getAddress(); // + result.getRegeocodeAddress().getCity() + result.getRegeocodeAddress().getDistrict() + result.getRegeocodeAddress().getTownship();
