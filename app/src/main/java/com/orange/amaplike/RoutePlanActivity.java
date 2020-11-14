@@ -971,7 +971,8 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
                 LatLonPoint point = polyline.get(0);
                 double limit = Numbers.toDouble(et_limit.getText().toString(), 4.2);
                 LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
-                Bitmap bitmap = ImageUtil.get(mActivity, limit);
+                Bitmap bitmap = ImageUtil.get(mActivity, limit
+                        - driveRouteResult.getPaths().indexOf(path) * 0.1);
                 if (marker != null) {
                     marker.remove();
                     marker.destroy();
