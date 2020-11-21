@@ -2,6 +2,7 @@ package com.orange.amaplike;
 
 import android.Manifest;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -955,7 +956,7 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
 
     Marker[] markers = new Marker[4];
 
-    private void setLimitAt(List<DriveStep> steps, DriveRouteResult driveRouteResult, DrivePath path, int index) {
+    private void setLimitAt(List<DriveStep> steps, DriveRouteResult driveRouteResult, DrivePath path, DrivingRouteOverlay drivingRouteOverlay, int index) {
         List<LatLonPoint> polyline = steps.get(index).getPolyline();
         int mI = index - steps.size() / 2 + 1;
         if (polyline != null && polyline.size() > 0) {
@@ -963,6 +964,7 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
             double limit = Numbers.toDouble(et_limit2.getText().toString(), 2.2);
             LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
             int pathIndex = driveRouteResult.getPaths().indexOf(path);
+            drivingRouteOverlay.setDriveColor(pathIndex == 0 ? 0 : Color.RED);
             Bitmap bitmap = ImageUtil.get(mActivity, pathIndex == 0 ? 5 : 3.5);
             if (markers[mI] != null) {
                 markers[mI].remove();
@@ -982,11 +984,6 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
                 mActivity, mAmap, path,
                 driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(),
                 null);
-        drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
-        drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
-        drivingRouteOverlay.removeFromMap();
-        drivingRouteOverlay.addToMap();
-        drivingRouteOverlay.zoomWithPadding(getTopLayoutHeight(), getSheetHeadHeight());
 
         List<DriveStep> steps = path.getSteps();
         int stepSize;
@@ -994,10 +991,16 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
             int start = stepSize / 2;
             for (int index = start - 1; index <= start + 1; index++) {
                 if (index >= 0 && index < stepSize) {
-                    setLimitAt(steps, driveRouteResult, path, index);
+                    setLimitAt(steps, driveRouteResult, path, drivingRouteOverlay, index);
                 }
             }
         }
+
+        drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
+        drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
+        drivingRouteOverlay.removeFromMap();
+        drivingRouteOverlay.addToMap();
+        drivingRouteOverlay.zoomWithPadding(getTopLayoutHeight(), getSheetHeadHeight());
 
         mAMapNavi.calculateDriveRoute(
                 Collections.singletonList(new NaviLatLng(driveRouteResult.getStartPos().getLatitude(), driveRouteResult.getStartPos().getLongitude()))
