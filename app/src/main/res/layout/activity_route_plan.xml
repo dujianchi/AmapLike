@@ -186,7 +186,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/space10"
                             android:background="@null"
-                            android:text="东风大卡车"
+                            android:text="金龙双层巴士"
                             android:textColor="@color/white" />
                     </LinearLayout>
 
@@ -209,8 +209,38 @@
                             android:textColor="@color/colorPrimaryRed"
                             android:textSize="@dimen/font16" />
 
+                        <TextView
+                            android:id="@+id/tv_limit1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/space10"
+                            android:background="@null"
+                            android:inputType="numberDecimal"
+                            android:text="4.2"
+                            android:textColor="@color/colorPrimaryRed" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/route_plan_start_edit_layout"
+                        android:layout_marginTop="@dimen/space10"
+                        android:layout_toLeftOf="@id/route_plan_exchange_btn"
+                        android:background="@drawable/shape_bg_route_plan_edit"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/space04">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/space08"
+                            android:text="实测高度(米）"
+                            android:textColor="@color/colorPrimaryRed"
+                            android:textSize="@dimen/font16" />
+
                         <EditText
-                            android:id="@+id/et_limit"
+                            android:id="@+id/et_limit2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/space10"

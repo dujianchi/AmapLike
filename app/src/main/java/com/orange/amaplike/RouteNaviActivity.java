@@ -55,7 +55,7 @@ public class RouteNaviActivity extends BaseActivity implements AMapNaviListener,
         mAMapNavi.setUseInnerVoice(true);
         mAMapNavi.setEmulatorNaviSpeed(60);
 
-        String limit = extras().get("limit", "4.2");
+        String limit = "5";//extras().get("limit", "4.2");
         ((TextView) findViewById(R.id.tv_limit)).setText(StringUtil.concat(limit, "m"));
 
         boolean gps = extras().get("gps", true);

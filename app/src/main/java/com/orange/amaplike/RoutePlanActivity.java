@@ -116,8 +116,10 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
     @BindView(R.id.bus_result_recyclerView)
     RecyclerView mBusResultRview;
 
-    @BindView(R.id.et_limit)
-    EditText et_limit;
+    @BindView(R.id.tv_limit1)
+    TextView tv_limit1;
+    @BindView(R.id.et_limit2)
+    EditText et_limit2;
     @BindView(R.id.tv_car_model)
     TextView tv_car_model;
 
@@ -652,7 +654,7 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
                 }
                 //todo
                 starter()
-                        .with("limit", et_limit.getText().toString())
+                        .with("limit", et_limit2.getText().toString())
                         .go(RouteNaviActivity.class);
                 //new NaviDialog().showView(mActivity, mStartPoi, mEndPoi, mSelectedType);
                 break;
@@ -679,7 +681,9 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
                 @Override
                 public void onPicked(String name, double val) {
                     tv_car_model.setText(name);
-                    et_limit.setText(String.valueOf(val));
+                    String text = String.valueOf(val);
+                    tv_limit1.setText(text);
+                    et_limit2.setText(text);
                 }
             });
         }
@@ -949,7 +953,28 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
         mNesteScrollView.setVisibility(View.VISIBLE);
     }
 
-    Marker marker;
+    Marker[] markers = new Marker[4];
+
+    private void setLimitAt(List<DriveStep> steps, DriveRouteResult driveRouteResult, DrivePath path, int index) {
+        List<LatLonPoint> polyline = steps.get(index).getPolyline();
+        int mI = index - steps.size() / 2 + 1;
+        if (polyline != null && polyline.size() > 0) {
+            LatLonPoint point = polyline.get(0);
+            double limit = Numbers.toDouble(et_limit2.getText().toString(), 2.2);
+            LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
+            int pathIndex = driveRouteResult.getPaths().indexOf(path);
+            Bitmap bitmap = ImageUtil.get(mActivity, pathIndex == 0 ? 5 : 3.5);
+            if (markers[mI] != null) {
+                markers[mI].remove();
+                markers[mI].destroy();
+                markers[mI] = null;
+            }
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap)).position(latLng);
+            markers[mI] = mAmap.addMarker(markerOptions);
+            markers[mI].setVisible(true);
+        }
+    }
 
     private void drawDriveRoutes(DriveRouteResult driveRouteResult, DrivePath path) {
         mAmap.clear();
@@ -966,22 +991,11 @@ public class RoutePlanActivity extends BaseActivity implements RouteSearch.OnRou
         List<DriveStep> steps = path.getSteps();
         int stepSize;
         if (steps != null && (stepSize = steps.size()) > 0) {
-            List<LatLonPoint> polyline = steps.get(stepSize / 2).getPolyline();
-            if (polyline != null && polyline.size() > 0) {
-                LatLonPoint point = polyline.get(0);
-                double limit = Numbers.toDouble(et_limit.getText().toString(), 4.2);
-                LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
-                Bitmap bitmap = ImageUtil.get(mActivity, limit
-                        - driveRouteResult.getPaths().indexOf(path) * 0.1);
-                if (marker != null) {
-                    marker.remove();
-                    marker.destroy();
-                    marker = null;
+            int start = stepSize / 2;
+            for (int index = start - 1; index <= start + 1; index++) {
+                if (index >= 0 && index < stepSize) {
+                    setLimitAt(steps, driveRouteResult, path, index);
                 }
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap)).position(latLng);
-                marker = mAmap.addMarker(markerOptions);
-                marker.setVisible(true);
             }
         }
 

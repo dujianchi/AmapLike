@@ -41,16 +41,19 @@
             android:name="com.amap.api.navi.AmapRouteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize|navigation" />
 
-        <activity
-            android:name=".RoutePlanActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/NoActionBarTheme"
-            android:windowSoftInputMode="stateHidden|stateUnchanged">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".RoutePlanActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/NoActionBarTheme"
+            android:windowSoftInputMode="stateHidden|stateUnchanged">
         </activity>
 
         <activity android:name=".pickpoi.PoiSearchActivity" />
